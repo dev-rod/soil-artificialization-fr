@@ -1,16 +1,46 @@
+#golem::document_and_reload()
+
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
-#' @import shiny
+#' @import shiny shinythemes shinydashboard
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    #shinythemes::themeSelector(),
     # Your application UI logic
-    fluidPage(
-      h1("soilArtificialization")
+    # List the first level UI elements here
+    # https://fontawesome.com/icons
+    dashboardPage(
+      dashboardHeader(title = "Suivi de l'artificialisation des sols en France", titleWidth=420),
+      dashboardSidebar(
+        sidebarMenu(
+          menuItem("Indicateurs", tabName = "kpi", icon = icon("dashboard")),
+          menuItem("Carte", tabName = "map", icon = icon("map")),
+          menuItem("Données", tabName = "data", icon = icon("table")),
+          menuItem("Experiment", tabName = "xp", icon = icon("flask"),
+                   badgeLabel = "new", badgeColor = "green")
+        )
+      ),
+      dashboardBody(
+        tabItems(
+          tabItem(tabName = "kpi",
+                  mod_arti_fr_ui("arti_fr_1")
+          ),
+          tabItem(tabName = "map",
+                  mod_arti_fr_ui("arti_fr_2")
+          )
+          # tabItem(tabName = "data",
+          #         mod_arti_fr_ui("arti_fr_1")
+          # )#,
+          #tabItem(tabName = "xp",
+          #        mod_arti_44_ui("name_of_module2_ui_1")
+          #)
+        )
+      )
     )
   )
 }

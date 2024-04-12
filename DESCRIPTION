@@ -6,8 +6,28 @@ Description: Experimentation template with diferent layers to analyze progressio
 License: What license is it under?
 Imports: 
     config (>= 0.3.2),
+    dplyr,
+    DT,
+    echarts4r,
+    forcats,
+    ggplot2,
     golem (>= 0.4.1),
-    shiny (>= 1.8.1)
+    httr,
+    jsonlite,
+    leaflet,
+    leaflet.providers,
+    lubridate,
+    magrittr,
+    mapview,
+    markdown,
+    pkgload,
+    sf,
+    shiny (>= 1.8.1),
+    shinydashboard,
+    shinythemes,
+    tidyr,
+    timechange,
+    tmap
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1

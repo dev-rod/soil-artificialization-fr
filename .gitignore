@@ -3,5 +3,8 @@
 .Rprofile
 .RData
 .Ruserdata
+R/archives
 renv/
 soilArtificialization.code-workspace
+data/
+doc/
