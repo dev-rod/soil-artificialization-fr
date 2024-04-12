@@ -6,5 +6,7 @@
 R/archives
 renv/
 soilArtificialization.code-workspace
-data/
-doc/
+data/*
+doc/*
+!data/.keep
+!doc/.keep
