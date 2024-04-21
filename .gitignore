@@ -1,12 +1,13 @@
 .Rproj.user
 .Rhistory
 .Rprofile
-.RData
 .Ruserdata
 R/archives
 renv/
 soilArtificialization.code-workspace
-data/*
-doc/*
+data/**/src
 !data/.keep
+!data/**/*.RData
+data/contours_administratifs_france/AdminExpressCommune.RData
+doc/*
 !doc/.keep

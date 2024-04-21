@@ -18,27 +18,31 @@ app_ui <- function(request) {
       dashboardHeader(title = "Suivi de l'artificialisation des sols en France", titleWidth=420),
       dashboardSidebar(
         sidebarMenu(
-          menuItem("Indicateurs", tabName = "kpi", icon = icon("dashboard")),
-          menuItem("Carte", tabName = "map", icon = icon("map")),
+          menuItem("Sur Orée d'Anjou", tabName = "local", icon = icon("map")),
+          menuItem("En France", tabName = "country", icon = icon("globe")),
+          #icon("dashboard"), icon("earth-europe")
           menuItem("Données", tabName = "data", icon = icon("table")),
-          menuItem("Experiment", tabName = "xp", icon = icon("flask"),
-                   badgeLabel = "new", badgeColor = "green")
+          menuItem("Experiment", tabName = "xp", icon = icon("flask"), badgeLabel = "new", badgeColor = "green"),
+          menuItem("Aires urbaines", tabName="urbanArea", icon = icon("city"))
         )
       ),
       dashboardBody(
         tabItems(
-          tabItem(tabName = "kpi",
+          tabItem(tabName = "local",
                   mod_arti_fr_ui("arti_fr_1")
           ),
-          tabItem(tabName = "map",
+          tabItem(tabName = "country",
                   mod_arti_fr_ui("arti_fr_2")
+          ),
+          tabItem(tabName = "data",
+                  mod_arti_fr_ui("arti_fr_3")
+          ),
+          tabItem(tabName = "xp",
+                  mod_arti_fr_ui("arti_fr_4")
+          ),
+          tabItem(tabName = "urbanArea",
+                  mod_arti_fr_ui("arti_fr_5")
           )
-          # tabItem(tabName = "data",
-          #         mod_arti_fr_ui("arti_fr_1")
-          # )#,
-          #tabItem(tabName = "xp",
-          #        mod_arti_44_ui("name_of_module2_ui_1")
-          #)
         )
       )
     )

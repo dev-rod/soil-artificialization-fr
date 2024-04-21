@@ -6,6 +6,7 @@ Description: Experimentation template with diferent layers to analyze progressio
 License: What license is it under?
 Imports: 
     config (>= 0.3.2),
+    data.table,
     dplyr,
     DT,
     echarts4r,
@@ -20,6 +21,7 @@ Imports:
     magrittr,
     mapview,
     markdown,
+    paletteer,
     pkgload,
     sf,
     shiny (>= 1.8.1),
