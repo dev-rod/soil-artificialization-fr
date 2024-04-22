@@ -3,7 +3,8 @@ stages:
   - deploy
 
 variables:
-  IMAGE_NAME: $GITLAB_USER_LOGIN/soil-artificialization:latest
+  IMAGE_NAME: $GITLAB_USER_LOGIN/soilartificialization:latest
+  # | tr '[:upper:]' '[:lower:]' .
 
 publish:
   image: docker
@@ -17,7 +18,6 @@ publish:
     - echo $PAT | docker login $CI_REGISTRY -u "$GITLAB_USER_LOGIN" --password-stdin
   script: 
     - docker build --tag $CI_REGISTRY/$IMAGE_NAME .
-    # | tr '[:upper:]' '[:lower:]' .
     - docker push $CI_REGISTRY/$IMAGE_NAME
 
 deploy:
