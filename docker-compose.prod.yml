@@ -11,8 +11,8 @@
 
 services:
   app:
-    container_name: soil-artificialization
-    image: registry.gitlab.com/rod74/soil-artificialization:latest
+    container_name: soilartificialization
+    image: registry.gitlab.com/rod74/soilartificialization:latest
     restart: always
     ports:
       - 127.0.0.1:8080:8081
