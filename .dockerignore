@@ -1,0 +1,5 @@
+data\**\src
+deploy
+doc
+dev
+.Rhistory

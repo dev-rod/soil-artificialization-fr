@@ -1,0 +1,16 @@
+# start app in dev
+# docker compose -f docker-compose.dev.yml up
+
+# stop container
+# docker compose -f docker-compose.dev.yml down
+
+# Full clean docker !! warning
+# docker rm $(docker ps -a -q) && docker rmi $(docker images -q) && docker builder prune -a
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8081

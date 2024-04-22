@@ -11,3 +11,4 @@ $run_dev.*
 ^R/archives
 ^app\.R$
 ^rsconnect$
+data\**\src\*

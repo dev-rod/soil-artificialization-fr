@@ -1,8 +1,10 @@
 Package: soilArtificialization
 Title: soil-artificialization
 Version: 0.0.0.9000
-Authors@R: person('Rodrigue', 'BERNARD', email = 'rodrigue@shuffledata.net', role = c('cre', 'aut'))
-Description: Experimentation template with diferent layers to analyze progression of soil artificialization in french region.
+Authors@R: 
+    person("Rodrigue", "BERNARD", , "rodrigue@shuffledata.net", role = c("cre", "aut"))
+Description: Experimentation template with diferent layers to analyze
+    progression of soil artificialization in local territory.
 License: What license is it under?
 Imports: 
     config (>= 0.3.2),
@@ -10,26 +12,26 @@ Imports:
     dplyr,
     DT,
     echarts4r,
+    echarts4r.assets,
     forcats,
-    ggplot2,
     golem (>= 0.4.1),
-    httr,
-    jsonlite,
+    htmltools,
     leaflet,
-    leaflet.providers,
     lubridate,
     magrittr,
     mapview,
-    markdown,
     paletteer,
-    pkgload,
+    RColorBrewer,
+    remotes,
+    scico,
     sf,
     shiny (>= 1.8.1),
     shinydashboard,
     shinythemes,
+    stringr,
     tidyr,
-    timechange,
-    tmap
+    tmap,
+    tmaptools
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1

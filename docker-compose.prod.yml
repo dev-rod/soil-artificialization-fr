@@ -1,0 +1,17 @@
+# start app in production
+# export CR_PAT=[gitlab_registry_container_access_token]
+# echo $CR_PAT | docker login registry.gitlab.com -u [gitlab_user] --password-stdin
+# docker compose -f docker-compose.prod.yml up
+
+# stop container
+# docker compose -f docker-compose.prod.yml down
+
+# Full clean docker !! warning
+# docker rm $(docker ps -a -q) && docker rmi $(docker images -q) && docker builder prune -a
+
+services:
+  app:
+    container_name: soil-artificialization
+    image: registry.gitlab.com/rod74/soil-artificialization:latest
+    ports:
+      - 127.0.0.1:8080:8081
