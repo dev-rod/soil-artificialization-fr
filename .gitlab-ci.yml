@@ -3,8 +3,7 @@ stages:
   - deploy
 
 variables:
-  LOWCASE_CI_PROJECT: $CI_PROJECT_NAME | tr '[:upper:]' '[:lower:]'
-  IMAGE_NAME: $GITLAB_USER_LOGIN/$LOWCASE_CI_PROJECT:latest
+  IMAGE_NAME: $GITLAB_USER_LOGIN/$CI_PROJECT:latest
 
 publish:
   image: docker
@@ -17,8 +16,8 @@ publish:
   before_script: 
     - echo $PAT | docker login $CI_REGISTRY -u "$GITLAB_USER_LOGIN" --password-stdin
   script: 
-    - docker build --tag $CI_REGISTRY/$IMAGE_NAME .
-    - docker push $CI_REGISTRY/$IMAGE_NAME
+    - docker build --tag $CI_REGISTRY/$IMAGE_NAME | tr '[:upper:]' '[:lower:]' .
+    - docker push $CI_REGISTRY/$IMAGE_NAME | tr '[:upper:]' '[:lower:]'
 
 deploy:
   image: docker
