@@ -3,7 +3,8 @@ stages:
   - deploy
 
 variables:
-  IMAGE_NAME: $GITLAB_USER_LOGIN/$CI_PROJECT_NAME:latest
+  LOWCASE_CI_PROJECT: $CI_PROJECT_NAME | tr '[:upper:]' '[:lower:]'
+  IMAGE_NAME: $GITLAB_USER_LOGIN/$LOWCASE_CI_PROJECT:latest
 
 publish:
   image: docker
