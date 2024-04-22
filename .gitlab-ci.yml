@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  IMAGE_NAME: $GITLAB_USER_LOGIN/soilartificialization:latest
+  IMAGE_NAME: $GITLAB_USER_LOGIN/soil-artificialization:latest
 
 publish:
   image: docker
