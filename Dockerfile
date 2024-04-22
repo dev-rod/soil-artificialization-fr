@@ -40,5 +40,5 @@ EXPOSE 8081
 CMD ["shiny-server"]
 
 # run app on container start
-CMD ["R", "-e", "shiny::runApp('/srv/shiny-server', host = '0.0.0.0', port = 8081)"]
+CMD ["R", "-e", "shiny::runApp('/srv/shiny-server', host = '0.0.0.0', port = 8080)"]
 #CMD R -e "options('shiny.port'=8081,shiny.host='0.0.0.0');library(soilArtificialization);soilArtificialization::run_app()"
