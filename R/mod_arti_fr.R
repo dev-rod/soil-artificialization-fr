@@ -25,7 +25,10 @@ mod_arti_fr_ui <- function(id) {
     tagList(
       #shiny::plotOutput(ns("histo_conso_global")),
       echarts4r::echarts4rOutput(ns("histo_conso_global"), height = "40vh"),
-      leaflet::leafletOutput(ns("carto_conso_global")),
+      shiny::fluidRow(
+        #leaflet::leafletOutput(ns("carto_conso_global_reg"))#,
+        leaflet::leafletOutput(ns("carto_conso_global_dept"))
+      ),
       shiny::fluidRow(
         shinydashboard::valueBoxOutput(ns("vbox"))
       )
@@ -71,18 +74,18 @@ mod_arti_fr_server <- function(id){
       # Menu Local
       if (grepl("arti_fr_1", id)) {
 
+        # Histogramme évolution annuelle consommation espace sur Orée d'Anjou
+        # avec répartition par type de consommation dans chacunes des colonnes
+        output$histo_conso_local <- echarts4r::renderEcharts4r({
+          histo_conso_espace_oree_anjou()
+        })
+
         # Carte de chaleur avec carroyage sur 1km du territoire local observé (Orée d'Anjou)
         # de consommation en m² avec 2 décimales par type d'activité sélectionnée
         # dans un sélecteur
         # Pas d'informations concernant le carroyage sur 200m
         output$carto_conso_local <- tmap::renderTmap({
           carto_conso_espace_oree_anjou()
-        })
-
-        # Histogramme évolution annuelle consommation espace sur Orée d'Anjou
-        # avec répartition par type de consommation dans chacunes des colonnes
-        output$histo_conso_local <- echarts4r::renderEcharts4r({
-          histo_conso_espace_oree_anjou()
         })
 
         # histogramme évolution annuelle consommation espace sur La Varenne
@@ -103,11 +106,18 @@ mod_arti_fr_server <- function(id){
           histo_conso_espace_france()
         })
 
-        # Carte de chaleur du territoire observé (régions en france ou départements en France)
+        # Carte de chaleur du territoire observé (régions en france)
         # de consommation en hectares avec 2 décimales par type d'activité sélectionnée
         # dans un sélecteur
-        output$carto_conso_global <- tmap::renderTmap({
-          carto_conso_espace_france()
+        output$carto_conso_global_reg <- tmap::renderTmap({
+          carto_conso_espace_reg_fr()
+        })
+
+        # Carte de chaleur du territoire observé (départements en France)
+        # de consommation en hectares avec 2 décimales par type d'activité sélectionnée
+        # dans un sélecteur
+        output$carto_conso_global_dept <- tmap::renderTmap({
+          carto_conso_espace_dept_fr()
         })
 
         output$vbox <- shinydashboard::renderValueBox({

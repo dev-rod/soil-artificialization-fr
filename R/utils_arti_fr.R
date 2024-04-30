@@ -12,23 +12,9 @@ getArtiData20092022_OLD <- function(){
   load("data/mesures_artificialisation_commune/arti_fr_2009_2022.RData")
 
   arti_fr_2009_2022 <- arti_fr_2009_2022 |>
-    # read.csv(
-    #   'data/mesures_artificialisation_commune/src/2019/pnb_action7_indicateurs_ff_consommation_espace_2019.csv',
-    #   sep = ";",
-    #   fileEncoding = "UTF-8") |>
     dplyr::mutate(
       IDREG = as.factor(IDREG),
       EPCI22 = as.factor(EPCI22)
-      # variables below probably in old file pnb_action7_indicateurs_ff_consommation_espace_2019.csv
-      # Identifiant de l’aire urbaine 2010 de la commune
-      #au10 = as.factor(au10),
-      # Typologie de la commune dans l’aire urbaine
-      #typau = as.factor(typau),
-      # tranche de population de l’aire urbaine
-      #typpopau10 = as.factor(typpopau10),
-      # identifiant de l’unité urbaine
-      # uu = as.factor(uu)
-      #
       # Aires urbaines remplacées par les aires d'attraction des communes
       # https://www.insee.fr/fr/information/4803954
       # https://www.insee.fr/fr/statistiques/fichier/4803954/poster_zaav.png
@@ -178,11 +164,11 @@ getArtiData20092022 <- function(){
 }
 
 # Chargement des Indicateurs de consommation d'espace - fraicheur de données 04/2024
-g_arti_fr_2009_2022 <- getArtiData20092022()
-g_arti_fr_2009_2022_no_geom <- g_arti_fr_2009_2022 |>
-  sf::st_set_geometry(NULL)
-# too big file
-#save(g_arti_fr_2009_2022, file = "data/mesures_artificialisation_commune/g_arti_fr_2009_2022.RData")
+#g_arti_fr_2009_2022 <- getArtiData20092022()
+#g_arti_fr_2009_2022_no_geom <- g_arti_fr_2009_2022 |>
+#  sf::st_set_geometry(NULL)
+#save(g_arti_fr_2009_2022_no_geom, file='data/mesures_artificialisation_commune/g_arti_fr_2009_2022_no_geom.RData')
+load('data/mesures_artificialisation_commune/g_arti_fr_2009_2022_no_geom.RData')
 
 #' Fonction calculant les agrégats sur une zone à partir des carreaux qui la recouvrent
 #' https://cerema.app.box.com/v/pnb-action7-indicateurs-ff/file/1270338746048
@@ -261,8 +247,6 @@ calculAgregatsZones <- function(fichierContoursSHP, listeCodesCommune) {
   agregatsZones <- carreauxSf |>
     sf::st_join(zones, join = sf::st_intersects, left = FALSE)
 
-  return(dplyr::distinct(agregatsZones, IdINSPIRE, .keep_all = TRUE))
-
   # OR intersection des carreaux avec les zones puis calcul des agrégats
   # agregatsZones <- agregatsZones %>%
   #   sf::st_set_geometry(NULL) %>%
@@ -274,7 +258,8 @@ calculAgregatsZones <- function(fichierContoursSHP, listeCodesCommune) {
   #   dplyr::select(-popImp) %>%
   #   dplyr::ungroup()
   #
-  # return(agregatsZones)
+
+  return(dplyr::distinct(agregatsZones, IdINSPIRE, .keep_all = TRUE))
 }
 
 #' sur Orée d'Anjou
@@ -292,14 +277,16 @@ carto_conso_espace_oree_anjou <- function(){
   #cheminFichierContoursSHP <- 'data/mesures_artificialisation_commune/src/2024/obs_artif_conso_com_2009_2022_carroyage_LEA/obs_artif_conso_com_2009_2022_carroyage_LEA.shp'
   #obs_artif_conso_com_2009_2022_carroyage_LEA <- sf::st_read(cheminFichierContoursSHP)
   #save(obs_artif_conso_com_2009_2022_carroyage_LEA, file='data/mesures_artificialisation_commune/obs_artif_conso_com_2009_2022_carroyage_LEA.RData')
-  load('data/mesures_artificialisation_commune/obs_artif_conso_com_2009_2022_carroyage_LEA.RData')
+  #load('data/mesures_artificialisation_commune/obs_artif_conso_com_2009_2022_carroyage_LEA.RData')
 
   # Conso espace sur Orée d'Anjou
   #cheminFichierContoursSHP <- 'data/mesures_artificialisation_commune/2024/obs_artif_conso_com_2009_2022/obs_artif_conso_com_2009_2022.shp'
   #artiFr2024 <- sf::st_read(dsn = 'data/mesures_artificialisation_commune/2024/obs_artif_conso_com_2009_2022/obs_artif_conso_com_2009_2022.shp')
 
-  carreaux_oree_anjou <- calculAgregatsZones( obs_artif_conso_com_2009_2022_carroyage_LEA, listeCodesCommune = c("49069")) |>
-    tidyr::drop_na(NAF09ART22)
+  #carreaux_oree_anjou <- calculAgregatsZones( obs_artif_conso_com_2009_2022_carroyage_LEA, listeCodesCommune = c("49069")) |>
+  #  tidyr::drop_na(NAF09ART22)
+  #save(carreaux_oree_anjou, file='data/mesures_artificialisation_commune/carreaux_oree_anjou.RData')
+  load('data/mesures_artificialisation_commune/carreaux_oree_anjou.RData')
   heat_map_oree_anjou <- heatmap(
     carreaux_oree_anjou,
     label="Consommation espace en m²\nentre 2009 et 2022",
@@ -324,124 +311,6 @@ histo_conso_espace_oree_anjou <- function(){
 
   arti49069_2009_2022_echart <- g_arti_fr_2009_2022_no_geom |>
     dplyr::filter(grepl(49069, IDCOM)) |>
-  # # init save in rdata format
-  # #arti49069_2009_2022 <- getArtiData20092022() |>
-  # #  dplyr::filter(grepl(49069, IDCOM))
-  # #save(arti49069_2009_2022, file = "data/mesures_artificialisation_commune/2024/obs_artif_conso_com_2009_2022/arti49069_2009_2022.RData")
-  # load("data/mesures_artificialisation_commune/arti49069_2009_2022.RData")
-  # arti49069_2009_2022_echart <- arti49069_2009_2022 |>
-  #   tidyr::pivot_longer(
-  #     #cols = c(NAF09ART10,ART09ACT10,ART09HAB10,ART09MIX10,ART09ROU10,ART09FER10,ART09INC10,NAF10ART11,ART10ACT11,ART10HAB11,ART10MIX11,ART10ROU11,ART10FER11,ART10INC11,NAF11ART12,ART11ACT12,ART11HAB12,ART11MIX12,ART11ROU12,ART11FER12,ART11INC12,NAF12ART13,ART12ACT13,ART12HAB13,ART12MIX13,ART12ROU13,ART12FER13,ART12INC13,NAF13ART14,ART13ACT14,ART13HAB14,ART13MIX14,ART13ROU14,ART13FER14,ART13INC14,NAF14ART15,ART14ACT15,ART14HAB15,ART14MIX15,ART14ROU15,ART14FER15,ART14INC15,NAF15ART16,ART15ACT16,ART15HAB16,ART15MIX16,ART15ROU16,ART15FER16,ART15INC16,NAF16ART17,ART16ACT17,ART16HAB17,ART16MIX17,ART16ROU17,ART16FER17,ART16INC17,NAF17ART18,ART17ACT18,ART17HAB18,ART17MIX18,ART17ROU18,ART17FER18,ART17INC18,NAF18ART19,ART18ACT19,ART18HAB19,ART18MIX19,ART18ROU19,ART18FER19,ART18INC19,NAF19ART20,ART19ACT20,ART19HAB20,ART19MIX20,ART19ROU20,ART19FER20,ART19INC20,NAF20ART21,ART20ACT21,ART20HAB21,ART20MIX21,ART20ROU21,ART20FER21,ART20INC21,NAF21ART22,ART21ACT22,ART21HAB22,ART21MIX22,ART21ROU22,ART21FER22,ART21INC22,NAF09ART22,ART09ACT22,ART09HAB22,ART09MIX22,ART09INC22,ART09ROU22,ART09FER22),
-  #     cols = c(NAF09ART10,NAF10ART11,NAF11ART12,NAF12ART13,NAF13ART14,NAF14ART15,NAF15ART16,NAF16ART17,NAF17ART18,NAF18ART19,NAF19ART20,NAF20ART21,NAF21ART22,NAF09ART22),
-  #     # names_to = c("typeArti", "year"),
-  #     # names_pattern = "([A-Za-z]+\\d\\d[A-Za-z]+)(\\d+$)", # out x 2 : typeArti & year : Ex (ART09INC)(10)
-  #     names_to = c("year"),
-  #     names_pattern = "(\\d+$)", # out x 1 : year : Ex (10)
-  #     # values_to = c("ha")
-  #     values_to = c("totalArti")
-  #   ) |>
-  #   dplyr::mutate(year = paste0("20", year)) |>
-  #   #dplyr::mutate(typeArti = stringr::substr(typeArti, 6, 8)) |>
-  #   dplyr::select(year, everything()) |>
-  #   dplyr::mutate(activite = dplyr::case_when(
-  #     year == 2010 ~ ART09ACT10,
-  #     year == 2011 ~ ART10ACT11,
-  #     year == 2012 ~ ART11ACT12,
-  #     year == 2013 ~ ART12ACT13,
-  #     year == 2014 ~ ART13ACT14,
-  #     year == 2015 ~ ART14ACT15,
-  #     year == 2016 ~ ART15ACT16,
-  #     year == 2017 ~ ART16ACT17,
-  #     year == 2018 ~ ART17ACT18,
-  #     year == 2019 ~ ART18ACT19,
-  #     year == 2020 ~ ART19ACT20,
-  #     year == 2021 ~ ART20ACT21,
-  #     year == 2022 ~ ART21ACT22,
-  #     .default = NULL
-  #   )) |>
-  #   dplyr::mutate(habitat = dplyr::case_when(
-  #     year == 2010 ~ ART09HAB10,
-  #     year == 2011 ~ ART10HAB11,
-  #     year == 2012 ~ ART11HAB12,
-  #     year == 2013 ~ ART12HAB13,
-  #     year == 2014 ~ ART13HAB14,
-  #     year == 2015 ~ ART14HAB15,
-  #     year == 2016 ~ ART15HAB16,
-  #     year == 2017 ~ ART16HAB17,
-  #     year == 2018 ~ ART17HAB18,
-  #     year == 2019 ~ ART18HAB19,
-  #     year == 2020 ~ ART19HAB20,
-  #     year == 2021 ~ ART20HAB21,
-  #     year == 2022 ~ ART21HAB22,
-  #     .default = NULL
-  #   )) |>
-  #   dplyr::mutate(mixte = dplyr::case_when(
-  #     year == 2010 ~ ART09MIX10,
-  #     year == 2011 ~ ART10MIX11,
-  #     year == 2012 ~ ART11MIX12,
-  #     year == 2013 ~ ART12MIX13,
-  #     year == 2014 ~ ART13MIX14,
-  #     year == 2015 ~ ART14MIX15,
-  #     year == 2016 ~ ART15MIX16,
-  #     year == 2017 ~ ART16MIX17,
-  #     year == 2018 ~ ART17MIX18,
-  #     year == 2019 ~ ART18MIX19,
-  #     year == 2020 ~ ART19MIX20,
-  #     year == 2021 ~ ART20MIX21,
-  #     year == 2022 ~ ART21MIX22,
-  #     .default = NULL
-  #   )) |>
-  #   dplyr::mutate(route = dplyr::case_when(
-  #     year == 2010 ~ ART09ROU10,
-  #     year == 2011 ~ ART10ROU11,
-  #     year == 2012 ~ ART11ROU12,
-  #     year == 2013 ~ ART12ROU13,
-  #     year == 2014 ~ ART13ROU14,
-  #     year == 2015 ~ ART14ROU15,
-  #     year == 2016 ~ ART15ROU16,
-  #     year == 2017 ~ ART16ROU17,
-  #     year == 2018 ~ ART17ROU18,
-  #     year == 2019 ~ ART18ROU19,
-  #     year == 2020 ~ ART19ROU20,
-  #     year == 2021 ~ ART20ROU21,
-  #     year == 2022 ~ ART21ROU22,
-  #     .default = NULL
-  #   )) |>
-  #   dplyr::mutate(chemin_fer = dplyr::case_when(
-  #     year == 2010 ~ ART09FER10,
-  #     year == 2011 ~ ART10FER11,
-  #     year == 2012 ~ ART11FER12,
-  #     year == 2013 ~ ART12FER13,
-  #     year == 2014 ~ ART13FER14,
-  #     year == 2015 ~ ART14FER15,
-  #     year == 2016 ~ ART15FER16,
-  #     year == 2017 ~ ART16FER17,
-  #     year == 2018 ~ ART17FER18,
-  #     year == 2019 ~ ART18FER19,
-  #     year == 2020 ~ ART19FER20,
-  #     year == 2021 ~ ART20FER21,
-  #     year == 2022 ~ ART21FER22,
-  #     .default = NULL
-  #   )) |>
-  #   dplyr::mutate(autres = dplyr::case_when(
-  #     year == 2010 ~ ART09INC10,
-  #     year == 2011 ~ ART10INC11,
-  #     year == 2012 ~ ART11INC12,
-  #     year == 2013 ~ ART12INC13,
-  #     year == 2014 ~ ART13INC14,
-  #     year == 2015 ~ ART14INC15,
-  #     year == 2016 ~ ART15INC16,
-  #     year == 2017 ~ ART16INC17,
-  #     year == 2018 ~ ART17INC18,
-  #     year == 2019 ~ ART18INC19,
-  #     year == 2020 ~ ART19INC20,
-  #     year == 2021 ~ ART20INC21,
-  #     year == 2022 ~ ART21INC22,
-  #     .default = NULL
-  #   )) |>
-  #   dplyr::select(year,IDCOM,IDCOMTXT,IDREG,IDREGTXT,IDDEP,IDDEPTXT,EPCI22,EPCI22TXT,SCOT,AAV2020,AAV2020TXT,AAV2020_TY,ART09ACT22,ART09HAB22,ART09MIX22,ART09INC22,ART09ROU22,ART09FER22,ARTCOM2020,POP13,POP19,POP1319,MEN13,MEN19,MEN1319,EMP13,EMP19,EMP1319,MEPART1319,MENHAB1319,ARTPOP1319,SURFCOM202,geometry,totalArti,activite,habitat,mixte,route,chemin_fer,autres) |>
-  #   dplyr::arrange(year)
-  #|>
     echarts4r::e_charts(year) |>
     echarts4r::e_title("Évolution annuelle de la consommation d'espace\n sur Orée d'Anjou entre 2009 et 2021", bottom='5') |>
     echarts4r::e_bar(activite, stack = "grp") |>
@@ -481,7 +350,11 @@ histo_conso_espace_varenne <- function(){
   # })
 }
 
-#' Evolution de la consommation d'espaces par région en France
+#' Evolution de la consommation d'espaces par région en France avec
+#' - le libellé de la région
+#' - le nombre de m² perdu entre l’année n-1 et l’année n
+#' TODO le nombre de m² perdu cumulé entre 2009 et l’année n.
+#' Dans quelle région cela semble s’améliorer ? Dans quelle région cela semble s’aggraver ?
 #'
 #' @return un graphique en courbe
 #'
@@ -502,229 +375,149 @@ histo_conso_espace_france <- function() {
     echarts4r::e_line(totalArtiReg) |>
     echarts4r::e_title("Consommation d'espaces en m²", bottom='15')
 
-  # plot <- ggplot2::ggplot(data = artif_by_reg_0922) +
-  #   ggplot2::geom_line(ggplot2::aes(x = year, y = totalArtiReg, color = IDREG))
-
-  # plot <- ggplot2::ggplot(artif_by_reg_0922) +
-  #   ggplot2::geom_line(ggplot2::aes(x = year, y = totalArtiReg, color = IDREGTXT))
-  plot
-
   return(plot)
 }
 
-histo_conso_espace_france_old <- function() {
-
-  # Loaded globally at start of this file
-  #observatoire <- getArtiData20092022()
-
-  # Constituer un fichier qui permet de réaliser des séries temporelles au niveau des régions :
-  #   faire un fichier avec une ligne pour chaque année n (au format date) et pour chaque région, et une colonne pour :
-  #   - le libellé de la région
-  #   - le nombre de m² perdu entre l’année n-1 et l’année n
-  #   - le nombre de m² perdu cumulé entre 2009 et l’année n.
-  artif_par_reg_0910 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF09ART10 = sum(NAF09ART10, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20100101')) |>
-    dplyr::rename(NAFART = NAF09ART10)
-
-  artif_par_reg_1011 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF10ART11 = sum(NAF10ART11, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20110101')) |>
-    dplyr::rename(NAFART = NAF10ART11)
-
-  artif_par_reg_1112 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF11ART12 = sum(NAF11ART12, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20120101')) |>
-    dplyr::rename(NAFART = NAF11ART12)
-
-  artif_par_reg_1213 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF12ART13 = sum(NAF12ART13, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20130101')) |>
-    dplyr::rename(NAFART = NAF12ART13)
-
-  artif_par_reg_1314 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF13ART14 = sum(NAF13ART14, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20140101')) |>
-    dplyr::rename(NAFART = NAF13ART14)
-
-  artif_par_reg_1415 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF14ART15 = sum(NAF14ART15, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20150101')) |>
-    dplyr::rename(NAFART = NAF14ART15)
-
-  artif_par_reg_1516 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF15ART16 = sum(NAF15ART16, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20160101')) |>
-    dplyr::rename(NAFART = NAF15ART16)
-
-  artif_par_reg_1617 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF16ART17 = sum(NAF16ART17, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20170101')) |>
-    dplyr::rename(NAFART = NAF16ART17)
-
-  artif_par_reg_1718 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF17ART18 = sum(NAF17ART18, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20180101')) |>
-    dplyr::rename(NAFART = NAF17ART18)
-
-  artif_par_reg_1819 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF18ART19 = sum(NAF18ART19, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20190101')) |>
-    dplyr::rename(NAFART = NAF18ART19)
-
-  artif_par_reg_1920 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF19ART20 = sum(NAF19ART20, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20200101')) |>
-    dplyr::rename(NAFART = NAF19ART20)
-
-  artif_par_reg_2021 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF20ART21 = sum(NAF20ART21, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20210101')) |>
-    dplyr::rename(NAFART = NAF20ART21)
-
-  artif_par_reg_2122 <- observatoire |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::summarise(NAF21ART22 = sum(NAF21ART22, na.rm = T)) |>
-    dplyr::mutate(annee = lubridate::ymd('20220101')) |>
-    dplyr::rename(NAFART = NAF21ART22)
-
-  artif_par_reg_0922 <- rbind(
-    artif_par_reg_0910,
-    artif_par_reg_1011,
-    artif_par_reg_1112,
-    artif_par_reg_1213,
-    artif_par_reg_1314,
-    artif_par_reg_1415,
-    artif_par_reg_1516,
-    artif_par_reg_1617,
-    artif_par_reg_1718,
-    artif_par_reg_1819,
-    artif_par_reg_1920,
-    artif_par_reg_2021,
-    artif_par_reg_2122
-  ) |>
-    dplyr::arrange(IDREGTXT, annee) |>
-    dplyr::group_by(IDREGTXT) |>
-    dplyr::mutate(NAFART_cum = cumsum(as.numeric(NAFART)))
-
-  # Faire un graphique ligne avec en abscisse l’année, en ordonnée le nombre de m² perdu cumulé entre 2009 et l’année n,
-  # et une ligne pour chaque région.
-  # Dans quelle région cela semble s’améliorer ? Dans quelle région cela semble s’aggraver ?
-
-  # artif_par_dep <- observatoire |>
-  #   group_by(IDREGTXT, iddeptxt) |>
-  #   summarise_at(vars(NAFART0917, surfcom17, ARTact0917, ARThab0917),
-  #                list(sum = ~ sum(., na.rm = T),
-  #                     min = ~ min(., na.rm = T)))
-
-  # artif_par_dep <- observatoire |>
-  #   group_by(IDREGTXT, iddeptxt) |>
-  #   summarise_if(is.numeric,
-  #                list(sum = ~ sum(., na.rm = T),
-  #                     min = ~ min(., na.rm = T)))
-
-  plot <- ggplot(data = artif_par_reg_0922) +
-    geom_line(aes(x = annee, y = NAFART_cum, color = IDREGTXT))
-
-  return(plot)
-}
-
-# Pour chaque région :
+# Pour chaque département :
 #   - le total de la surface artificialisée
 #   - la part de la surface totale qui a été artificialisée entre 2009 et 2022
 #   - la part de la surface artificialisée lié à l’activité et à l’habitat
 # Chargement des Indicateurs de consommation d'espace en 2022
-carto_conso_espace_france <- function(){
+carto_conso_espace_dept_fr <- function(){
 
-  regions_fr <- getFrRegion()
+  # dept_fr <- getFrDept()
 
-  artif_par_reg <- g_arti_fr_2009_2022_no_geom |>
-    dplyr::group_by(IDREGTXT, IDREG) |>
-    dplyr::summarise(
-      # surface_totale_artificialisee
-      totalArti = sum(totalArti, na.rm = T),
-      # surface_totale_commune
-      SURFCOM202 = sum(SURFCOM202, na.rm = T),
-      # surface_totale_artificialisee_activite
-      ART09ACT22 = sum(ART09ACT22, na.rm = T),
-      # surface_totale_artificialisee_habitat
-      ART09HAB22 = sum(ART09HAB22, na.rm = T)
-    ) |>
-    dplyr::mutate(
-      # part_surface_totale_artificialisee = ((surface_totale_artificialisee / surface_totale_commune)*100),
-      part_totalArti = totalArti * 100 / SURFCOM202,
-      # part_surface_totale_artificialisee_act = (((surface_totale_artificialisee_activite)/surface_totale_artificialisee)*100)
-      part_ART09ACT22 = ART09ACT22 * 100 / totalArti,
-      # part_surface_totale_artificialisee_hab_act = (((surface_totale_artificialisee_activite+surface_totale_artificialisee_habitat)/surface_totale_artificialisee)*100),
-      part_ART09HAB22 = ART09HAB22 * 100 / totalArti
-    ) |>
-    dplyr::ungroup() |>
-    dplyr::left_join(dplyr::select(regions_fr, geometry, INSEE_REG), by = c("IDREG" = "INSEE_REG"))
-
-  # Quelle région a le plus perdu de m² ?
-  # dplyr::filter(artif_par_reg, totalArti == max(totalArti)) |> dplyr::pull(IDREGTXT)
-
-  # Quelle région a perdu la plus grande part de son territoire ?
-  # dplyr::filter(artif_par_reg, part_totalArti == max(part_totalArti)) |> dplyr::pull(IDREGTXT)
-
-  # Quelle région artificialise le plus pour l’activité ?
-  # dplyr::filter(artif_par_reg, part_ART09ACT22 == max(part_ART09ACT22)) |> dplyr::pull(IDREGTXT)
-
-  # Porter le libellé de la région en une variable factorielle triée par la part de sa surface perdue.
-  artif_par_reg <- artif_par_reg |>
-    dplyr::arrange(-totalArti) |>
-    dplyr::mutate(IDREGTXT = forcats::fct_inorder(IDREGTXT))
-  # levels(artif_par_reg$IDREGTXT)
-  #
-  # ggplot(data= artif_par_reg)+
-  #   geom_col(aes(x=IDREGTXT,y=totalArti))
-
-  # Faire la même chose au niveau départemental (à moindre coût).
-  # Porter le libellé du département en une variable factorielle triée par région.
-
-  # artif_par_dep <- observatoire |>
-  #   dplyr::group_by(IDREGTXT, iddeptxt) |>
+  # artif_by_fr_dept <- g_arti_fr_2009_2022_no_geom |>
+  #   dplyr::group_by(IDDEPTXT, IDDEP) |>
   #   dplyr::summarise(
+  #     # surface_totale_artificialisee
   #     totalArti = sum(totalArti, na.rm = T),
-  #     surfcom17 = sum(surfcom17, na.rm = T),
-  #     ARTact0917 = sum(ARTact0917, na.rm = T),
-  #     ARThab0917 = sum(ARThab0917, na.rm = T)
+  #     # surface_totale_commune
+  #     SURFCOM202 = sum(SURFCOM202, na.rm = T),
+  #     # surface_totale_artificialisee_activite
+  #     ART09ACT22 = sum(ART09ACT22, na.rm = T),
+  #     # surface_totale_artificialisee_habitat
+  #     ART09HAB22 = sum(ART09HAB22, na.rm = T)
   #   ) |>
   #   dplyr::mutate(
-  #     part_NAFART0917 = totalArti * 100 / surfcom17,
-  #     part_ARTact0917 = ARTact0917 * 100 / totalArti,
-  #     part_ARThab0917 = ARThab0917 * 100 / totalArti
-  #   )
+  #     # part_surface_totale_artificialisee = ((surface_totale_artificialisee / surface_totale_commune)*100),
+  #     part_totalArti = totalArti * 100 / SURFCOM202,
+  #     # part_surface_totale_artificialisee_act = (((surface_totale_artificialisee_activite)/surface_totale_artificialisee)*100)
+  #     part_ART09ACT22 = ART09ACT22 * 100 / totalArti,
+  #     # part_surface_totale_artificialisee_hab_act = (((surface_totale_artificialisee_activite+surface_totale_artificialisee_habitat)/surface_totale_artificialisee)*100),
+  #     part_ART09HAB22 = ART09HAB22 * 100 / totalArti
+  #   ) |>
+  #   dplyr::ungroup() |>
+  #   dplyr::left_join(dplyr::select(dept_fr, geometry, INSEE_DEP), by = c("IDDEP" = "INSEE_DEP"))
 
-  # dplyr::filter(artif_par_dep, totalArti == max(totalArti)) |> dplyr::pull(iddeptxt)
-  # dplyr::filter(artif_par_dep, part_totalArti == max(part_totalArti)) |> dplyr::pull(iddeptxt)
-  # dplyr::filter(artif_par_dep, part_ARTact0917 == max(part_ARTact0917)) |> dplyr::pull(iddeptxt)
+  # Porter le libellé du département en une variable factorielle triée par la part de sa surface perdue.
+  # artif_by_fr_dept <- artif_by_fr_dept |>
+  #   dplyr::arrange(-totalArti) |>
+  #   dplyr::mutate(IDDEPTXT = forcats::fct_inorder(IDDEPTXT))
 
-  # artif_par_dep <- artif_par_dep |>
-  #   dplyr::arrange(IDREGTXT) |>
-  #   dplyr::mutate(iddeptxt = forcats::fct_inorder(iddeptxt))
+  # artif_by_fr_dept$surface_km2 <- artif_by_fr_dept$totalArti / 1e6
+  # save(artif_by_fr_dept, file='data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
+  load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
 
-  artif_par_reg$surface_km2 <- artif_par_reg$totalArti / 1e6
   map <- heatmap(
-    artif_par_reg,
+    artif_by_fr_dept,
     label="Surface (km²)",
     label_field="surface_km2",
     heat_field="surface_km2")
 
   return(map)
 }
+
+# Quel département a le plus perdu de m² ?
+kpi_max_conso_espace_dept_fr <- function(){
+  if(!exists("artif_by_fr_dept")) {
+    load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
+  }
+  value <- dplyr::filter(artif_by_fr_dept, totalArti == max(totalArti)) |>
+    dplyr::pull(IDDEPTXT)
+  return(value)
+}
+
+# Quel département a perdu la plus grande part de son territoire ?
+kpi_max_percent_conso_espace_dept_fr <- function(){
+  if(!exists("artif_by_fr_dept")) {
+    load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
+  }
+  value <- dplyr::filter(artif_by_fr_dept, part_totalArti == max(part_totalArti)) |>
+    dplyr::pull(IDDEPTXT)
+  return(value)
+}
+
+# Quel département artificialise le plus pour l’activité ?
+kpi_first_conso_espace_dept_fr <- function(){
+  if(!exists("artif_by_fr_dept")) {
+    load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
+  }
+  value <- dplyr::filter(artif_by_fr_dept, part_ART09ACT22 == max(part_ART09ACT22)) |>
+    dplyr::pull(IDDEPTXT)
+  return(value)
+}
+
+
+# Pour chaque région :
+#   - le total de la surface artificialisée
+#   - la part de la surface totale qui a été artificialisée entre 2009 et 2022
+#   - la part de la surface artificialisée lié à l’activité et à l’habitat
+# Chargement des Indicateurs de consommation d'espace en 2022
+carto_conso_espace_reg_fr <- function(){
+
+  # regions_fr <- getFrRegion()
+  #
+  # artif_by_fr_reg <- g_arti_fr_2009_2022_no_geom |>
+  #   dplyr::group_by(IDREGTXT, IDREG) |>
+  #   dplyr::summarise(
+  #     # surface_totale_artificialisee
+  #     totalArti = sum(totalArti, na.rm = T),
+  #     # surface_totale_commune
+  #     SURFCOM202 = sum(SURFCOM202, na.rm = T),
+  #     # surface_totale_artificialisee_activite
+  #     ART09ACT22 = sum(ART09ACT22, na.rm = T),
+  #     # surface_totale_artificialisee_habitat
+  #     ART09HAB22 = sum(ART09HAB22, na.rm = T)
+  #   ) |>
+  #   dplyr::mutate(
+  #     # part_surface_totale_artificialisee = ((surface_totale_artificialisee / surface_totale_commune)*100),
+  #     part_totalArti = totalArti * 100 / SURFCOM202,
+  #     # part_surface_totale_artificialisee_act = (((surface_totale_artificialisee_activite)/surface_totale_artificialisee)*100)
+  #     part_ART09ACT22 = ART09ACT22 * 100 / totalArti,
+  #     # part_surface_totale_artificialisee_hab_act = (((surface_totale_artificialisee_activite+surface_totale_artificialisee_habitat)/surface_totale_artificialisee)*100),
+  #     part_ART09HAB22 = ART09HAB22 * 100 / totalArti
+  #   ) |>
+  #   dplyr::ungroup() |>
+  #   dplyr::left_join(dplyr::select(regions_fr, geometry, INSEE_REG), by = c("IDREG" = "INSEE_REG"))
+
+  # Porter le libellé de la région en une variable factorielle triée par la part de sa surface perdue.
+  # artif_by_fr_reg <- artif_by_fr_reg |>
+  #   dplyr::arrange(-totalArti) |>
+  #   dplyr::mutate(IDREGTXT = forcats::fct_inorder(IDREGTXT))
+
+  #artif_by_fr_reg$surface_km2 <- artif_by_fr_reg$totalArti / 1e6
+  #artif_by_fr_reg <- artif_par_reg
+  #save(artif_by_fr_reg, file='data/mesures_artificialisation_commune/artif_by_fr_reg.RData')
+  load('data/mesures_artificialisation_commune/artif_by_fr_reg.RData')
+
+  map <- heatmap(
+    artif_by_fr_reg,
+    label="Surface (km²)",
+    label_field="surface_km2",
+    heat_field="surface_km2")
+
+  return(map)
+}
+
+# Quelle région a le plus perdu de m² ?
+# dplyr::filter(artif_by_fr_reg, totalArti == max(totalArti)) |> dplyr::pull(IDREGTXT)
+
+# Quelle région a perdu la plus grande part de son territoire ?
+# dplyr::filter(artif_by_fr_reg, part_totalArti == max(part_totalArti)) |> dplyr::pull(IDREGTXT)
+
+# Quelle région artificialise le plus pour l’activité ?
+# dplyr::filter(artif_by_fr_reg, part_ART09ACT22 == max(part_ART09ACT22)) |> dplyr::pull(IDREGTXT)
 
 # Total de la surface artificialisée en France entre 2009 et 2022
 totalSurfaceArti <- function(){

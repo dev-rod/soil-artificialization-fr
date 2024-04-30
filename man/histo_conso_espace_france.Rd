@@ -2,7 +2,11 @@
 % Please edit documentation in R/utils_arti_fr.R
 \name{histo_conso_espace_france}
 \alias{histo_conso_espace_france}
-\title{Evolution de la consommation d'espaces par région en France}
+\title{Evolution de la consommation d'espaces par région en France avec
+- le libellé de la région
+- le nombre de m² perdu entre l’année n-1 et l’année n
+TODO le nombre de m² perdu cumulé entre 2009 et l’année n.
+Dans quelle région cela semble s’améliorer ? Dans quelle région cela semble s’aggraver ?}
 \usage{
 histo_conso_espace_france()
 }
@@ -10,5 +14,9 @@ histo_conso_espace_france()
 un graphique en courbe
 }
 \description{
-Evolution de la consommation d'espaces par région en France
+Evolution de la consommation d'espaces par région en France avec
+- le libellé de la région
+- le nombre de m² perdu entre l’année n-1 et l’année n
+TODO le nombre de m² perdu cumulé entre 2009 et l’année n.
+Dans quelle région cela semble s’améliorer ? Dans quelle région cela semble s’aggraver ?
 }
