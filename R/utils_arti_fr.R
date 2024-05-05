@@ -438,7 +438,7 @@ load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
 #                  , port='xxx'
 #                  , dbname='xxx'
 #                  , user='xxx'
-#                  , password='xxxx')
+#                  , password='xxx')
   #sf::st_write(artif_by_fr_dept, dsn = conn, delete_layer = TRUE)
 
   # install.packages("RSQLite")
