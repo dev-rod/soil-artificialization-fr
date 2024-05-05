@@ -378,11 +378,18 @@ histo_conso_espace_france <- function() {
   return(plot)
 }
 
-# Pour chaque département :
-#   - le total de la surface artificialisée
-#   - la part de la surface totale qui a été artificialisée entre 2009 et 2022
-#   - la part de la surface artificialisée lié à l’activité et à l’habitat
-# Chargement des Indicateurs de consommation d'espace en 2022
+#' Carte de la consommation d'espaces par département en France avec
+#' Pour chaque département :
+#'   - le total de la surface artificialisée
+#'   - la part de la surface totale qui a été artificialisée entre 2009 et 2022
+#'   - la part de la surface artificialisée lié à l’activité et à l’habitat
+#' Chargement des Indicateurs de consommation d'espace en 2022
+#' TODO traiter les 5 lignes ci-dessus
+#'
+#' @return une carte
+#'
+#' @import dplyr forcats echarts4r RPostgres
+#'
 carto_conso_espace_dept_fr <- function(){
 
   # dept_fr <- getFrDept()
@@ -417,13 +424,44 @@ carto_conso_espace_dept_fr <- function(){
 
   # artif_by_fr_dept$surface_km2 <- artif_by_fr_dept$totalArti / 1e6
   # save(artif_by_fr_dept, file='data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
-  load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
+load('data/mesures_artificialisation_commune/artif_by_fr_dept.RData')
+  #####################################################################"
+  # todo test conversion rdata to sql lite
+  # https://cran.r-project.org/web/packages/RSQLite/vignettes/RSQLite.html
+  # https://github.com/r-dbi/RSQLite/issues/269
+  # https://rdrr.io/cran/RSQLite/man/SQLite.html"
+  #library(DBI)
+  #install.packages("RPostgres")
+  #library(RPostgres)
+# conn <- RPostgres::dbConnect(RPostgres::Postgres()
+#                  , host='xxx'
+#                  , port='xxx'
+#                  , dbname='xxx'
+#                  , user='xxx'
+#                  , password='xxxx')
+  #sf::st_write(artif_by_fr_dept, dsn = conn, delete_layer = TRUE)
+
+  # install.packages("RSQLite")
+  # library(RSQLite)
+  # conn <- dbConnect(RSQLite::SQLite(), "artif.sqlite")
+  # conn.enable_load_extension(True)
+  # cur = conn.cursor()
+  # conn.execute("PRAGMA foreign_keys = ON")
+  # conn.execute("SELECT load_extension('mod_spatialite')") -- add this line
+  # cur.execute("SELECT InitSpatialMetaData(1);")
+
+  #RPostgres::dbWriteTable(conn, "artif_by_fr_dept", artif_by_fr_dept, overwrite = TRUE, append = FALSE)
+# artif_by_fr_dept <- sf::st_read(conn, layer = "sf") |>
+#   lwgeom::st_snap_to_grid(700)
+  #artif_by_fr_dept_pg <- RPostgres::dbReadTable(conn, "artif_by_fr_dept")
+  ####################################################################
 
   map <- heatmap(
     artif_by_fr_dept,
     label="Surface (km²)",
     label_field="surface_km2",
-    heat_field="surface_km2")
+    heat_field="surface_km2",
+    snap=TRUE)
 
   return(map)
 }
@@ -457,7 +495,6 @@ kpi_first_conso_espace_dept_fr <- function(){
     dplyr::pull(IDDEPTXT)
   return(value)
 }
-
 
 # Pour chaque région :
 #   - le total de la surface artificialisée
@@ -505,7 +542,8 @@ carto_conso_espace_reg_fr <- function(){
     artif_by_fr_reg,
     label="Surface (km²)",
     label_field="surface_km2",
-    heat_field="surface_km2")
+    heat_field="surface_km2",
+    snap=TRUE)
 
   return(map)
 }

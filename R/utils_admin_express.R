@@ -163,7 +163,7 @@ getFrCommunes <- function(insee_dep = c()){
 #' @import sf dplyr
 #'
 getFrDept <- function(){
-  # AdminExpressDept <- sf::st_read(dsn = 'data/contours_administratifs_france/src/ign_admin_express/2024/ADMIN-EXPRESS_3-2__SHP_LAMB93_FXX_2024-03-25/ADMIN-EXPRESS/1_DONNEES_LIVRAISON_2024-03-00237/ADE_3-2_SHP_LAMB93_FXX-ED2024-03-25/DEPARTEMENT.shp')
+  # AdminExpressDept <- sf::st_read(dsn = 'data/contours_administratifs_france/src/ign_admin_express/2024/DEPARTEMENT.shp')
   # save(AdminExpressDept, file='data/contours_administratifs_france/AdminExpressDept.RData')
   load('data/contours_administratifs_france/AdminExpressDept.RData')
   DepartementOreeAnjou2024 <- AdminExpressDept

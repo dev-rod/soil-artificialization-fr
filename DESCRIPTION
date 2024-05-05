@@ -9,6 +9,7 @@ License: What license is it under?
 Imports: 
     config (>= 0.3.2),
     data.table,
+    DBI,
     dplyr,
     DT,
     echarts4r,
@@ -23,6 +24,7 @@ Imports:
     paletteer,
     RColorBrewer,
     remotes,
+    RPostgres,
     scico,
     sf,
     shiny (>= 1.8.1),

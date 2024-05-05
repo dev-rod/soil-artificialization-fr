@@ -10,7 +10,7 @@
 #' @noRd
 #'
 #' @import tmap sf
-heatmap <- function(df, label, label_field=NA, heat_field, basemap="OpenStreetMap") {
+heatmap <- function(df, label, label_field=NA, heat_field, basemap="OpenStreetMap", snap=FALSE) {
 
   ##########################################################################################
   # TO TEST
@@ -31,6 +31,15 @@ heatmap <- function(df, label, label_field=NA, heat_field, basemap="OpenStreetMa
   tmap::tmap_mode("view")
 
   df <- sf::st_as_sf(df)
+
+  # for admin_express in particular whose geometry fineness is very great
+  # in order to optimize the map display times with tmap.
+  # Tests with postgis did not improve performance either.
+  # To dig
+  if(isTRUE(snap)){
+    df <- df |>
+      lwgeom::st_snap_to_grid(700)
+  }
 
   map <- tm_basemap(basemap) +
     tmap::tm_shape(df) +

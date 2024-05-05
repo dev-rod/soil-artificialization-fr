@@ -26,7 +26,7 @@ mod_arti_fr_ui <- function(id) {
       #shiny::plotOutput(ns("histo_conso_global")),
       echarts4r::echarts4rOutput(ns("histo_conso_global"), height = "40vh"),
       shiny::fluidRow(
-        #leaflet::leafletOutput(ns("carto_conso_global_reg"))#,
+        leaflet::leafletOutput(ns("carto_conso_global_reg")),
         leaflet::leafletOutput(ns("carto_conso_global_dept"))
       ),
       shiny::fluidRow(
