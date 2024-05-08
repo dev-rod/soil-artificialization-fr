@@ -23,6 +23,7 @@ RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
 
 #COPY deploy/.Renviron .Renviron
 RUN echo "options(renv.config.pak.enabled = FALSE, repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" | tee /usr/local/lib/R/etc/Rprofile.site | tee /usr/lib/R/etc/Rprofile.site
+
 RUN R -e 'install.packages("remotes")'
 #RUN R -e 'remotes::install_version("renv", version = "1.0.3")'
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
