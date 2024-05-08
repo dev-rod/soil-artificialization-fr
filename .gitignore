@@ -3,7 +3,6 @@
 .Rprofile
 .Ruserdata
 R/archives
-renv/
 soilArtificialization.code-workspace
 data/**/src
 !data/.keep
