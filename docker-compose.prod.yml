@@ -2,6 +2,7 @@
 # export CR_PAT=[gitlab_registry_container_access_token]
 # echo $CR_PAT | docker login registry.gitlab.com -u [gitlab_user] --password-stdin
 # docker compose -f docker-compose.prod.yml up
+# docker logs -f ctn_id
 
 # stop container
 # docker compose -f docker-compose.prod.yml down

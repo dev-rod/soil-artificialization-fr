@@ -40,6 +40,6 @@ deploy:
   script:
     - scp -rp ./docker-compose.prod.yml $SSH_USER@$SSH_HOST:$WORK_DIR
     # TODO test & add a filter on docker builder prune like docker builder prune --filter="label=name=soilartificialization"
-    - ssh $SSH_USER@$SSH_HOST "cd $WORK_DIR && mkdir -p ./renv/.cache && docker compose -f docker-compose.prod.yml down && docker rm soilartificialization-app-1 && docker rmi soilartificialization-app && docker rmi soilartificialization && docker builder prune -a && docker compose -f docker-compose.prod.yml up -d && exit"
+    - ssh $SSH_USER@$SSH_HOST "cd $WORK_DIR && mkdir -p ./renv/.cache && docker compose -f docker-compose.prod.yml down && docker rmi registry.gitlab.com/rod74/soilartificialization && docker compose -f docker-compose.prod.yml up -d && exit"
   after_script:
     - rm -rf ~/.ssh
