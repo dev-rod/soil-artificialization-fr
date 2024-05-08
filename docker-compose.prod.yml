@@ -14,5 +14,7 @@ services:
     container_name: soilartificialization
     image: registry.gitlab.com/rod74/soilartificialization:latest
     restart: always
+    volumes:
+      - ./renv/.cache:/srv/shiny-server/.cache/R/renv
     ports:
       - 127.0.0.1:8081:8080

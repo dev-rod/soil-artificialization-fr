@@ -9,14 +9,14 @@ variables:
 publish:
   image: docker
   stage: publish
-  services: 
+  services:
     - docker:dind
   only:
     - production
   environment: production
-  before_script: 
+  before_script:
     - echo $PAT | docker login $CI_REGISTRY -u "$GITLAB_USER_LOGIN" --password-stdin
-  script: 
+  script:
     - docker build --tag $CI_REGISTRY/$IMAGE_NAME .
     - docker push $CI_REGISTRY/$IMAGE_NAME
 
@@ -39,6 +39,7 @@ deploy:
     - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
   script:
     - scp -rp ./docker-compose.prod.yml $SSH_USER@$SSH_HOST:$WORK_DIR
-    - ssh $SSH_USER@$SSH_HOST "cd $WORK_DIR && docker compose -f docker-compose.prod.yml up -d && exit"
+    # TODO test & add a filter on docker builder prune like docker builder prune --filter="label=name=soilartificialization"
+    - ssh $SSH_USER@$SSH_HOST "cd $WORK_DIR && mkdir -p ./renv/.cache && docker compose -f docker-compose.prod.yml down && docker rm soilartificialization-app-1 && docker rmi soilartificialization-app && docker rmi soilartificialization && docker builder prune -a && docker compose -f docker-compose.prod.yml up -d && exit"
   after_script:
     - rm -rf ~/.ssh

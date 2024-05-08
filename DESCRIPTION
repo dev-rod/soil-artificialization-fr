@@ -9,7 +9,6 @@ License: What license is it under?
 Imports: 
     config (>= 0.3.2),
     data.table,
-    DBI,
     dplyr,
     DT,
     echarts4r,
@@ -18,7 +17,7 @@ Imports:
     golem (>= 0.4.1),
     htmltools,
     leaflet,
-    lubridate,
+    lwgeom,
     magrittr,
     mapview,
     paletteer,

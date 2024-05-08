@@ -11,3 +11,4 @@ data/**/src
 data/contours_administratifs_france/AdminExpressCommune.RData
 doc/*
 !doc/.keep
+shared_docker_renv/

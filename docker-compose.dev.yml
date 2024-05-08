@@ -13,5 +13,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    volumes:
+      - ./shared_docker_renv/cache:/srv/shiny-server/.cache/R/renv
     ports:
       - 8080:8080
